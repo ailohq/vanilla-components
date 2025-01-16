@@ -63,7 +63,7 @@
   },
   "devDependencies": {
     "@embeddable.com/core": "^2.8.1",
-    "@embeddable.com/react": "^2.9.1",
+    "@embeddable.com/react": "^2.9.2",
     "@embeddable.com/sdk-core": "^3.12.4",
     "@embeddable.com/sdk-react": "^3.10.4",
     "@trivago/prettier-plugin-sort-imports": "^4.3.0",

@@ -323,19 +323,19 @@
   resolved "https://registry.npmjs.org/@date-fns/tz/-/tz-1.2.0.tgz"
   integrity sha512-LBrd7MiJZ9McsOgxqWX7AaxrDjcFVjWH/tIKJd7pnR7McaslGYOP1QmmiBXdJH/H/yLCT+rcQ7FaPBUxRGUtrg==
 
-"@embeddable.com/core@^2.8.1", "@embeddable.com/core@2.8.1":
-  version "2.8.1"
-  resolved "https://registry.npmjs.org/@embeddable.com/core/-/core-2.8.1.tgz"
-  integrity sha512-px0Z9B1p2Wr6f/5eeOnXcEtv5/WUweznupBIYC7YfkvADApAWxg7XzHjwUhLCCL0DhZJcOT5UtNF9e9cgNPBGQ==
+"@embeddable.com/core@^2.8.1", "@embeddable.com/core@2.8.2":
+  version "2.8.2"
+  resolved "https://registry.npmjs.org/@embeddable.com/core/-/core-2.8.2.tgz"
+  integrity sha512-5fGgPtbvIq5K+VemRDzRp2FEjVcfh7YqLrpqcMU7VQFsxR2A3tYOlt/ywZTN0gLjUOi3h+izbQK+7fjIujGk8g==
   dependencies:
     jsdom "^24.1.1"
 
-"@embeddable.com/react@^2.9.1":
-  version "2.9.1"
-  resolved "https://registry.npmjs.org/@embeddable.com/react/-/react-2.9.1.tgz"
-  integrity sha512-P8IenI4AbRC9j9P//qZjtbruEv0ZfloScDHOX4HJF7eMrry2XobYO5vohhFo1DMxW77ipG8K7nF8k/3VgcfLCA==
+"@embeddable.com/react@^2.9.2":
+  version "2.9.2"
+  resolved "https://registry.npmjs.org/@embeddable.com/react/-/react-2.9.2.tgz"
+  integrity sha512-H/fMUjXmNZljB9ZjWvvoSIipSBjCxtmWOfFxSHJLmnjpNgxnd249uBdaSQj769OfDl5h3oXmCbG954Qd51lk1w==
   dependencies:
-    "@embeddable.com/core" "2.8.1"
+    "@embeddable.com/core" "2.8.2"
 
 "@embeddable.com/sdk-core@^3.12.4", "@embeddable.com/sdk-core@3.12.4":
   version "3.12.4"
