@@ -64,7 +64,7 @@ export default function getStackedChartData(
     useCustomDateFormat,
     xAxis,
     maxLabelsToShow,
-    otherLabelsName
+    otherLabelsName,
   } = props;
   // const labels = [...new Set(results?.data?.map((d: Record) => d[xAxis?.name || '']))] as string[];
   const otherSegmentsGroupedName = otherSegmentsName ?? 'Other'
@@ -93,7 +93,7 @@ export default function getStackedChartData(
 
   results?.data?.forEach((d) => {
     const seg = d[segment?.name || ''];
-    const axis = d[xAxis?.name || ''];
+    const axis = d[xAxis?.name || ''] ?? 'Uncategorised';
     const met = d[metric?.name || ''];
 
     if(labels.includes(axis)){
@@ -186,7 +186,7 @@ export default function getStackedChartData(
   }
 
   function labelsToInclude(): string[] {
-    const uniqueLabels = [...new Set(results?.data?.map((d: Record) => d[xAxis?.name || '']))] as string[]
+    const uniqueLabels = [...new Set(results?.data?.map((d: Record) => d[xAxis?.name || ''] ?? 'Uncategorised' ))] as string[]
     if(!maxLabelsToShow || maxLabelsToShow < 1){
       return uniqueLabels;
     }
