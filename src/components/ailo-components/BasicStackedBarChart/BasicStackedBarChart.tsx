@@ -12,6 +12,7 @@ import getStackedChartData, {Props} from "../../util/getStackedChartData";
 import Container from "../../vanilla/Container";
 import getBarChartOptions from "../../util/getBarChartOptions";
 import React from "react";
+import {AILO_BAR_CHART_SEGMENT_COLORS} from "../colors";
 
 ChartJS.register(
     CategoryScale,
@@ -56,6 +57,8 @@ export default (props: Props) => {
         minBarLength: 0,
         borderRadius: 5,
     };
+
+    props.customisedSegmentColors = AILO_BAR_CHART_SEGMENT_COLORS;
 
     if (props.showTotals) {
         const totals: Totals = {};

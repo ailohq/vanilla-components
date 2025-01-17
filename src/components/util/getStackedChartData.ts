@@ -36,6 +36,7 @@ export type Props = {
   stackBars?: boolean;
   maxLabelsToShow?: number;
   otherLabelsName?: string;
+  customisedSegmentColors?: string[];
 };
 
 type Options = {
@@ -65,6 +66,7 @@ export default function getStackedChartData(
     xAxis,
     maxLabelsToShow,
     otherLabelsName,
+    customisedSegmentColors
   } = props;
   // const labels = [...new Set(results?.data?.map((d: Record) => d[xAxis?.name || '']))] as string[];
   const otherSegmentsGroupedName = otherSegmentsName ?? 'Other'
@@ -115,13 +117,15 @@ export default function getStackedChartData(
   const dateFormat =
     useCustomDateFormat && granularity ? DATE_DISPLAY_FORMATS[granularity] : undefined;
 
+  const segmentColors = customisedSegmentColors ?? COLORS;
+
   return {
     labels: labels.map((l) => formatValue(l, { meta: xAxis?.meta, dateFormat: dateFormat })),
     datasets: segments.map((s, i) => {
       const dataset = {
         ...datasetsMeta,
-        backgroundColor: COLORS[i % COLORS.length],
-        borderColor: COLORS[i % COLORS.length],
+        backgroundColor: segmentColors[i % segmentColors.length],
+        borderColor: segmentColors[i % segmentColors.length],
         label: s, // this is actually segment name, not label, but chart.js wants "label" here
         data: labels.map((label) => {
           const segmentValue = resultMap[label][s];
