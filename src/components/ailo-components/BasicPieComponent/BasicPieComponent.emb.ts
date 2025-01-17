@@ -2,11 +2,11 @@ import {defineComponent, EmbeddedComponentMeta, Inputs} from '@embeddable.com/re
 import { loadData } from '@embeddable.com/core';
 
 import Component from './BasicPieComponent';
-import {Dataset, Dimension, Measure} from "@embeddable.com/core/lib/loadData";
 
 export const meta = {
     name: 'BasicPieComponent',  // unique name for this component (must match file name)
     label: 'Basic Pie',
+    category: 'Ailo: components',
     inputs: [   // the inputs the no-code builder user will be asked to enter
         {
             name: "ds", // unique name for this input

@@ -4,6 +4,7 @@ import { ChartDataset, ChartOptions } from 'chart.js';
 import formatValue from '../util/format';
 import { setYAxisStepSize } from './chartjs/common';
 import { Props } from './getStackedChartData';
+import { LayoutPosition } from "chart.js/dist/types/layout";
 
 // We're adding a few properties to use when showing totals on the chart
 type ExtendedChartDataset = ChartDataset<'bar' | 'line'> & {
@@ -51,6 +52,7 @@ export default function getBarChartOptions({
   segment,
   showLabels = false,
   showLegend = false,
+  legendPosition = 'bottom',
   showSecondYAxis = false,
   showTotals = false,
   stackMetrics = false,
@@ -69,6 +71,7 @@ export default function getBarChartOptions({
   reverseXAxis?: boolean;
   secondAxisTitle?: string;
   showSecondYAxis?: boolean;
+  legendPosition?: LayoutPosition;
   stackMetrics?: boolean;
   stacked?: boolean;
   xAxisTitle?: string;
@@ -180,7 +183,7 @@ export default function getBarChartOptions({
     plugins: {
       legend: {
         display: showLegend,
-        position: 'bottom',
+        position: legendPosition,
         labels: {
           usePointStyle: true,
           boxHeight: 8,

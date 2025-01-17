@@ -3,6 +3,7 @@ import { ChartData } from 'chart.js';
 
 import { COLORS, DATE_DISPLAY_FORMATS } from '../constants';
 import formatValue from '../util/format';
+import { LayoutPosition } from "chart.js/dist/types/layout";
 
 type DatasetsMeta = {
   [key: string]: boolean | string | number;
@@ -21,6 +22,7 @@ export type Props = {
   segment: Dimension;
   showLabels?: boolean;
   showLegend?: boolean;
+  legendPosition?: LayoutPosition;
   showTotals?: boolean;
   title?: string;
   totals?: { [key: string]: { total: number; lastSegment: number | null } };
