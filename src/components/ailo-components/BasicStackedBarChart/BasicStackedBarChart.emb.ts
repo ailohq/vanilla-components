@@ -87,6 +87,13 @@ export const meta = {
             category: 'Chart settings',
         },
         {
+            name: 'maxLabelsToShow',
+            type: 'number',
+            label: 'Max number of labels to show',
+            defaultValue: 8,
+            category: 'Chart settings',
+        },
+        {
             name: 'showLabels',
             type: 'boolean',
             label: 'Show Labels',

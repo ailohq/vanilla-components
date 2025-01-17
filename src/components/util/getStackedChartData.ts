@@ -33,6 +33,7 @@ export type Props = {
   yAxisTitle?: string;
   isGroupedBar?: boolean;
   stackBars?: boolean;
+  maxLabelsToShow?: number;
 };
 
 type Options = {
@@ -58,9 +59,11 @@ export default function getStackedChartData(
     showTotals,
     totals,
     useCustomDateFormat,
-    xAxis
+    xAxis,
+    maxLabelsToShow
   } = props;
-  const labels = [...new Set(results?.data?.map((d: Record) => d[xAxis?.name || '']))] as string[];
+  // const labels = [...new Set(results?.data?.map((d: Record) => d[xAxis?.name || '']))] as string[];
+  const labels = labelsToInclude();
   const segments = segmentsToInclude();
   const resultMap: { [key: string]: LabelRef } = {};
 
@@ -87,11 +90,20 @@ export default function getStackedChartData(
     const axis = d[xAxis?.name || ''];
     const met = d[metric?.name || ''];
 
-    if (segments.includes(seg)) {
-      resultMap[axis][seg] = parseFloat(met);
+    if(labels.includes(axis)){
+      if (segments.includes(seg)) {
+        resultMap[axis][seg] = parseFloat(met);
+      } else {
+        resultMap[axis]['Other'] = (resultMap[axis]['Other'] || 0) + parseFloat(met);
+      }
     } else {
-      resultMap[axis]['Other'] = (resultMap[axis]['Other'] || 0) + parseFloat(met);
+      if (segments.includes(seg)) {
+        resultMap['Other'][seg] = parseFloat(met);
+      } else {
+        resultMap['Other']['Other'] = (resultMap['Other']['Other'] || 0) + parseFloat(met);
+      }
     }
+
   });
 
   const dateFormat =
@@ -165,5 +177,15 @@ export default function getStackedChartData(
     segmentsToInclude.push('Other');
 
     return segmentsToInclude;
+  }
+
+  function labelsToInclude(): string[] {
+    const uniqueLabels = [...new Set(results?.data?.map((d: Record) => d[xAxis?.name || '']))] as string[]
+    if(!maxLabelsToShow || maxLabelsToShow < 1){
+      return uniqueLabels;
+    }
+    const labelsToInclude = uniqueLabels.slice(0, maxLabelsToShow);
+    labelsToInclude.push('Other');
+    return labelsToInclude;
   }
 }
