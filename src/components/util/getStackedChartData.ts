@@ -17,6 +17,7 @@ export type Props = {
   granularity?: Granularity;
   isTSGroupedBarChart?: boolean;
   maxSegments?: number;
+  otherSegmentsName?: string;
   metric: Measure;
   results: DataResponse;
   segment: Dimension;
@@ -34,6 +35,7 @@ export type Props = {
   isGroupedBar?: boolean;
   stackBars?: boolean;
   maxLabelsToShow?: number;
+  otherLabelsName?: string;
 };
 
 type Options = {
@@ -53,6 +55,7 @@ export default function getStackedChartData(
     displayAsPercentage,
     granularity,
     maxSegments,
+    otherSegmentsName,
     metric,
     results,
     segment,
@@ -60,9 +63,12 @@ export default function getStackedChartData(
     totals,
     useCustomDateFormat,
     xAxis,
-    maxLabelsToShow
+    maxLabelsToShow,
+    otherLabelsName
   } = props;
   // const labels = [...new Set(results?.data?.map((d: Record) => d[xAxis?.name || '']))] as string[];
+  const otherSegmentsGroupedName = otherSegmentsName ?? 'Other'
+  const otherLabelsGroupedName = otherLabelsName ?? 'Other'
   const labels = labelsToInclude();
   const segments = segmentsToInclude();
   const resultMap: { [key: string]: LabelRef } = {};
@@ -94,13 +100,13 @@ export default function getStackedChartData(
       if (segments.includes(seg)) {
         resultMap[axis][seg] = parseFloat(met);
       } else {
-        resultMap[axis]['Other'] = (resultMap[axis]['Other'] || 0) + parseFloat(met);
+        resultMap[axis][otherSegmentsGroupedName] = (resultMap[axis][otherSegmentsGroupedName] || 0) + parseFloat(met);
       }
     } else {
       if (segments.includes(seg)) {
-        resultMap['Other'][seg] = parseFloat(met);
+        resultMap[otherLabelsGroupedName][seg] = parseFloat(met);
       } else {
-        resultMap['Other']['Other'] = (resultMap['Other']['Other'] || 0) + parseFloat(met);
+        resultMap[otherLabelsGroupedName][otherSegmentsGroupedName] = (resultMap[otherLabelsGroupedName][otherSegmentsGroupedName] || 0) + parseFloat(met);
       }
     }
 
@@ -174,7 +180,7 @@ export default function getStackedChartData(
 
     const segmentsToInclude = summedSegments.slice(0, maxSegments).map((s) => s.name);
 
-    segmentsToInclude.push('Other');
+    segmentsToInclude.push(otherSegmentsGroupedName);
 
     return segmentsToInclude;
   }
@@ -185,7 +191,7 @@ export default function getStackedChartData(
       return uniqueLabels;
     }
     const labelsToInclude = uniqueLabels.slice(0, maxLabelsToShow);
-    labelsToInclude.push('Other');
+    labelsToInclude.push(otherLabelsGroupedName);
     return labelsToInclude;
   }
 }
