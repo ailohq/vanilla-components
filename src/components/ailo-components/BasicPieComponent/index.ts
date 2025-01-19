@@ -1,0 +1,1 @@
+export * as BasicPieComponent from "./BasicPieComponent.emb";

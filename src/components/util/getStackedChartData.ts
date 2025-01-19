@@ -3,6 +3,7 @@ import { ChartData } from 'chart.js';
 
 import { COLORS, DATE_DISPLAY_FORMATS } from '../constants';
 import formatValue from '../util/format';
+import { LayoutPosition } from "chart.js/dist/types/layout";
 
 type DatasetsMeta = {
   [key: string]: boolean | string | number;
@@ -16,11 +17,13 @@ export type Props = {
   granularity?: Granularity;
   isTSGroupedBarChart?: boolean;
   maxSegments?: number;
+  otherSegmentsName?: string;
   metric: Measure;
   results: DataResponse;
   segment: Dimension;
   showLabels?: boolean;
   showLegend?: boolean;
+  legendPosition?: LayoutPosition;
   showTotals?: boolean;
   title?: string;
   totals?: { [key: string]: { total: number; lastSegment: number | null } };
@@ -31,6 +34,9 @@ export type Props = {
   yAxisTitle?: string;
   isGroupedBar?: boolean;
   stackBars?: boolean;
+  maxLabelsToShow?: number;
+  otherLabelsName?: string;
+  customisedSegmentColors?: string[];
 };
 
 type Options = {
@@ -50,15 +56,22 @@ export default function getStackedChartData(
     displayAsPercentage,
     granularity,
     maxSegments,
+    otherSegmentsName,
     metric,
     results,
     segment,
     showTotals,
     totals,
     useCustomDateFormat,
-    xAxis
+    xAxis,
+    maxLabelsToShow,
+    otherLabelsName,
+    customisedSegmentColors
   } = props;
-  const labels = [...new Set(results?.data?.map((d: Record) => d[xAxis?.name || '']))] as string[];
+  // const labels = [...new Set(results?.data?.map((d: Record) => d[xAxis?.name || '']))] as string[];
+  const otherSegmentsGroupedName = otherSegmentsName ?? 'Other'
+  const otherLabelsGroupedName = otherLabelsName ?? 'Other'
+  const labels = labelsToInclude();
   const segments = segmentsToInclude();
   const resultMap: { [key: string]: LabelRef } = {};
 
@@ -82,26 +95,37 @@ export default function getStackedChartData(
 
   results?.data?.forEach((d) => {
     const seg = d[segment?.name || ''];
-    const axis = d[xAxis?.name || ''];
+    const axis = d[xAxis?.name || ''] ?? 'Uncategorised';
     const met = d[metric?.name || ''];
 
-    if (segments.includes(seg)) {
-      resultMap[axis][seg] = parseFloat(met);
+    if(labels.includes(axis)){
+      if (segments.includes(seg)) {
+        resultMap[axis][seg] = parseFloat(met);
+      } else {
+        resultMap[axis][otherSegmentsGroupedName] = (resultMap[axis][otherSegmentsGroupedName] || 0) + parseFloat(met);
+      }
     } else {
-      resultMap[axis]['Other'] = (resultMap[axis]['Other'] || 0) + parseFloat(met);
+      if (segments.includes(seg)) {
+        resultMap[otherLabelsGroupedName][seg] = parseFloat(met);
+      } else {
+        resultMap[otherLabelsGroupedName][otherSegmentsGroupedName] = (resultMap[otherLabelsGroupedName][otherSegmentsGroupedName] || 0) + parseFloat(met);
+      }
     }
+
   });
 
   const dateFormat =
     useCustomDateFormat && granularity ? DATE_DISPLAY_FORMATS[granularity] : undefined;
+
+  const segmentColors = customisedSegmentColors ?? COLORS;
 
   return {
     labels: labels.map((l) => formatValue(l, { meta: xAxis?.meta, dateFormat: dateFormat })),
     datasets: segments.map((s, i) => {
       const dataset = {
         ...datasetsMeta,
-        backgroundColor: COLORS[i % COLORS.length],
-        borderColor: COLORS[i % COLORS.length],
+        backgroundColor: segmentColors[i % segmentColors.length],
+        borderColor: segmentColors[i % segmentColors.length],
         label: s, // this is actually segment name, not label, but chart.js wants "label" here
         data: labels.map((label) => {
           const segmentValue = resultMap[label][s];
@@ -160,8 +184,18 @@ export default function getStackedChartData(
 
     const segmentsToInclude = summedSegments.slice(0, maxSegments).map((s) => s.name);
 
-    segmentsToInclude.push('Other');
+    segmentsToInclude.push(otherSegmentsGroupedName);
 
     return segmentsToInclude;
+  }
+
+  function labelsToInclude(): string[] {
+    const uniqueLabels = [...new Set(results?.data?.map((d: Record) => d[xAxis?.name || ''] ?? 'Uncategorised' ))] as string[]
+    if(!maxLabelsToShow || maxLabelsToShow < 1){
+      return uniqueLabels;
+    }
+    const labelsToInclude = uniqueLabels.slice(0, maxLabelsToShow);
+    labelsToInclude.push(otherLabelsGroupedName);
+    return labelsToInclude;
   }
 }
